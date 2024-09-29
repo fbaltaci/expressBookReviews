@@ -3,8 +3,8 @@ let books = {
     author: "Chinua Achebe",
     title: "Things Fall Apart",
     reviews: {
-      1: "my first review",
-      2: "my second review",
+      "username1": "my first review",
+      "username2": "my second review",
     },
   },
   2: { author: "Hans Christian Andersen", title: "Fairy tales", reviews: {} },
