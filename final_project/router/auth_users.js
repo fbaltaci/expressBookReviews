@@ -13,7 +13,31 @@ const authenticatedUser = (username, password) => {
   return users.some((user) => user.username === username && user.password === password);
 };
 
-//only registered users can login
+
+/**
+ * @openapi
+ * /customer/login:
+ *   post:
+ *     summary: User login
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *       400:
+ *         description: Missing credentials
+ *       403:
+ *         description: Invalid credentials
+ */
 regd_users.post("/login", (req, res) => {
   const customerUsername = req.body.username;
   const customerPassword = req.body.password;
@@ -39,7 +63,44 @@ regd_users.post("/login", (req, res) => {
   }
 });
 
-// Add a book review
+/**
+ * @openapi
+ * /customer/auth/review/{isbn}:
+ *   put:
+ *     summary: Add or update a book review
+ *     parameters:
+ *       - name: isbn
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - name: username
+ *         in: query
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - name: password
+ *         in: query
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               review:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Review added or updated
+ *       403:
+ *         description: Unauthorized
+ *       404:
+ *         description: Book not found
+ */
 regd_users.put("/auth/review/:isbn", (req, res) => {
   const isbn = req.params.isbn;
   const username = req.query.username;
@@ -69,7 +130,35 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   }
 });
 
-// Delete a book review
+/**
+ * @openapi
+ * /customer/auth/review/{isbn}:
+ *   delete:
+ *     summary: Delete a book review
+ *     parameters:
+ *       - name: isbn
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - name: username
+ *         in: query
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - name: password
+ *         in: query
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Review deleted successfully
+ *       403:
+ *         description: Unauthorized
+ *       404:
+ *         description: Book or review not found
+ */
 regd_users.delete("/auth/review/:isbn", (req, res) => {
   const isbn = req.params.isbn;
   const username = req.query.username;

@@ -4,6 +4,28 @@ let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
 
+/**
+ * @openapi
+ * /register:
+ *   post:
+ *     summary: Register a new user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Registration successful
+ *       400:
+ *         description: User already exists or input missing
+ */
 public_users.post("/register", (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
@@ -20,7 +42,15 @@ public_users.post("/register", (req, res) => {
   }
 });
 
-// Get the book list available in the shop
+/**
+ * @openapi
+ * /:
+ *   get:
+ *     summary: Get all books
+ *     responses:
+ *       200:
+ *         description: List of books
+ */
 public_users.get("/", function (req, res) {
   let promiseGetBooks = new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -41,7 +71,23 @@ public_users.get("/", function (req, res) {
     });
 });
 
-// Get book details based on ISBN
+/**
+ * @openapi
+ * /isbn/{isbn}:
+ *   get:
+ *     summary: Get book details by ISBN
+ *     parameters:
+ *       - name: isbn
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Book details found
+ *       404:
+ *         description: Book not found
+ */
 public_users.get("/isbn/:isbn", function (req, res) {
   const isbn = parseInt(req.params.isbn);
 
@@ -64,7 +110,23 @@ public_users.get("/isbn/:isbn", function (req, res) {
     });
 });
 
-// Get book details based on author
+/**
+ * @openapi
+ * /author/{author}:
+ *   get:
+ *     summary: Get books by author
+ *     parameters:
+ *       - name: author
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Books by the author
+ *       404:
+ *         description: Author not found
+ */
 public_users.get("/author/:author", function (req, res) {
   const author = req.params.author;
 
@@ -90,7 +152,23 @@ public_users.get("/author/:author", function (req, res) {
     });
 });
 
-// Get all books based on title
+/**
+ * @openapi
+ * /title/{title}:
+ *   get:
+ *     summary: Get books by title
+ *     parameters:
+ *       - name: title
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Books with the title
+ *       404:
+ *         description: Title not found
+ */
 public_users.get("/title/:title", function (req, res) {
   const title = req.params.title;
   if (title) {
@@ -103,7 +181,23 @@ public_users.get("/title/:title", function (req, res) {
   }
 });
 
-//  Get book review
+/**
+ * @openapi
+ * /review/{isbn}:
+ *   get:
+ *     summary: Get book reviews by ISBN
+ *     parameters:
+ *       - name: isbn
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Reviews for the book
+ *       404:
+ *         description: ISBN not found or invalid
+ */
 public_users.get("/review/:isbn", function (req, res) {
   const isbn = parseInt(req.params.isbn);
 
