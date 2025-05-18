@@ -1,177 +1,174 @@
 # 📚 Express Book Reviews API
 
-An Express.js-based RESTful API that allows users to browse books, register, log in, and submit or delete book reviews.
-The API features JWT authentication, session management, and book retrieval by title, author, and ISBN.
+An Express.js-based RESTful API that allows users to browse books, register, log in, and manage reviews.  
+Now featuring JWT authentication, modular structure (routes/controllers/models), and auto-generated Swagger
+documentation.
 
 ## 🚀 Features
 
-- 📖 Retrieve book details by ISBN, title, or author.
-- 📝 Authenticated users can add, update, or delete reviews.
-- 🔐 JWT-based authentication for secure login.
-- 🛠 Express.js backend with session-based authentication.
-- 📡 Supports RESTful API endpoints.
+- 📖 Browse book details by ISBN, title, or author
+- 🔒 JWT authentication & middleware-based route protection
+- 📝 Authenticated users can add, update, or delete reviews
+- ⚙️ Modular folder structure with controllers, models, middlewares
+- 🧪 Swagger UI for interactive API docs (`/api-docs`)
 
 ## 📂 Project Structure
 
 ```
-expressBookReviews/
-│── final_project/
-│   ├── router/
-│   │   ├── auth_users.js        # Authentication & User Routes
-│   │   ├── booksdb.js           # Book Database (Mock Data)
-│   │   ├── general.js           # Public Routes
-│   ├── index.js                 # Main Express.js App
-│   ├── package.json             # Dependencies & Scripts
-│   ├── README.md                # Project Documentation
-└── package-lock.json
+final\_project/
+├── app.js # Main Express.js app
+├── package.json
+├── .env (optional)
+│
+├── routes/
+│ ├── auth.routes.js # Auth & Review routes
+│ └── books.routes.js # Public book routes
+│
+├── controllers/
+│ ├── auth.controller.js # Auth-related logic
+│ └── book.controller.js # Book and review handlers
+│
+├── models/
+│ └── book.model.js # Static book mock data
+│
+├── middlewares/
+│ └── auth.js # JWT auth middleware
+│
+├── swagger/
+│ └── swaggerConfig.js # Swagger setup
+│
+├── data/
+│ └── booksdb.js # Static book data
 
-```
+````
 
 ## ⚙️ Installation & Setup
 
 ### 1️⃣ Clone the Repository
 
-```
+```bash
 git clone https://github.com/fbaltaci/expressBookReviews.git
 cd expressBookReviews/final_project
-```
+````
 
-## 2️⃣ Install Dependencies
+### 2️⃣ Install Dependencies
 
-```
+```bash
 npm install
 ```
 
-## 3️⃣ Run the Server
+### 3️⃣ Run the Server
 
-```
-npm start
+```bash
+node app.js
 ```
 
-The server runs on http://localhost:5000
+Server runs at:
+➡️ `http://localhost:5000`
+Swagger docs:
+➡️ `http://localhost:5000/api-docs`
 
 ## 📡 API Endpoints
 
-### 🔓 Public Endpoints (No Authentication Required)
+### 🔓 Public Endpoints
 
-- Method Endpoint Description
-- POST /register Register a new user
-- GET /books Get all books
-- GET /isbn/:isbn Get book details by ISBN
-- GET /author/:author Get books by a specific author
-- GET /title/:title Get books by title
-- GET /review/:isbn Get book reviews by ISBN
+| Method | Endpoint             | Description            |
+|--------|----------------------|------------------------|
+| POST   | `/customer/register` | Register a new user    |
+| GET    | `/`                  | Get all books          |
+| GET    | `/isbn/:isbn`        | Get book by ISBN       |
+| GET    | `/author/:author`    | Get books by author    |
+| GET    | `/title/:title`      | Get books by title     |
+| GET    | `/review/:isbn`      | Get reviews for a book |
 
-### 🔒 Authenticated User Endpoints (Requires JWT)
+### 🔒 Authenticated Endpoints (Requires JWT)
 
-- Method Endpoint Description
-- POST /customer/login Login and receive a JWT
-- PUT /customer/auth/review/:isbn Add or update a book review
-- DELETE /customer/auth/review/:isbn Delete a book review
+| Method | Endpoint                      | Description            |
+|--------|-------------------------------|------------------------|
+| POST   | `/customer/login`             | User login             |
+| PUT    | `/customer/auth/review/:isbn` | Add or update a review |
+| DELETE | `/customer/auth/review/:isbn` | Delete a review        |
 
-## 🔑 Authentication & Authorization
+## 🔑 Authentication
 
-- To access protected routes, users must log in and receive a JWT token.
-- Pass the token in the request headers as:
+After login, you’ll receive a JWT token.
+Send it with protected requests:
 
-```JSON
-{
-  "Authorization": "Bearer your-token-here"
-}
+```http
+Authorization: Bearer your-token-here
 ```
 
-- Example login request:
+## 📘 Example Usage
 
-```curl
- curl -X POST http://localhost:5000/customer/login \
--H "Content-Type: application/json" \
--d '{"username": "testuser", "password": "password123"}'
-```
+### ➕ Register
 
-## 🛠 Technologies Used
-
-- Node.js – JavaScript runtime
-- Express.js – Web framework for Node.js
-- JWT (jsonwebtoken) – Secure authentication
-- Express-session – Session management
-- Nodemon – Auto-reloading during development
-
-## 📝 Example API Requests
-
-### Register a New User
-
-POST /register
-
-```JSON
+```http
+POST /customer/register
+Content-Type: application/json
 {
   "username": "newuser",
   "password": "securepassword"
 }
 ```
 
-### Login
+### 🔐 Login
 
+```http
 POST /customer/login
-
-```JSON
 {
   "username": "newuser",
   "password": "securepassword"
 }
 ```
 
-### Get Book Details by ISBN
+### 📚 Get Book by ISBN
 
+```http
 GET /isbn/1
+```
+
 Response:
 
-```JSON
+```json
 {
   "author": "Chinua Achebe",
   "title": "Things Fall Apart",
   "reviews": {
-    "username1": "my first review",
-    "username2": "my second review"
+    "user1": "Loved it!"
   }
 }
 ```
 
-### Add a Review (Authenticated)
+### ✏️ Add Review
 
+```http
 PUT /customer/auth/review/1
-Headers:
-
-```JSON
+Authorization: Bearer your-token
+Content-Type: application/json
 {
-  "Authorization": "Bearer your-token"
+  "review": "Fantastic read!"
 }
 ```
 
-Body:
+## 🔍 Interactive Swagger Docs
 
-```JSON
-{
-"review": "Amazing book! A must-read."
-}
-```
+Available at:
+[http://localhost:5000/api-docs](http://localhost:5000/api-docs)
+You can test all endpoints, add your JWT token, and view schemas.
 
-### Delete a Review (Authenticated)
+## 🛠 Tech Stack
 
-DELETE /customer/auth/review/1
-Headers:
-
-```JSON
-{
-  "Authorization": "Bearer your-token"
-}
-```
+* **Node.js** + **Express**
+* **JWT** (`jsonwebtoken`)
+* **Session management** (`express-session`)
+* **Swagger UI** (`swagger-ui-express`)
+* **Modular architecture** (routes/controllers/models)
 
 ## 🛡️ License
 
-This project is licensed under the MIT License.
+MIT
 
-## Links
+## 🔗 Links
 
-- 🔗 GitHub Repository: https://github.com/fbaltaci/expressBookReviews
-- 🌎 Live API: _will be available later!_
+* GitHub: [https://github.com/fbaltaci/expressBookReviews](https://github.com/fbaltaci/expressBookReviews)
 
